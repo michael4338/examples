@@ -30,13 +30,17 @@ clean-install \
     dumb-init \
     wget
 
-CASSANDRA_PATH="cassandra/${CASSANDRA_VERSION}/apache-cassandra-${CASSANDRA_VERSION}-bin.tar.gz"
-CASSANDRA_DOWNLOAD="http://www.apache.org/dyn/closer.cgi?path=/${CASSANDRA_PATH}&as_json=1"
-CASSANDRA_MIRROR=`wget -q -O - ${CASSANDRA_DOWNLOAD} | grep -oP "(?<=\"preferred\": \")[^\"]+"`
+#CASSANDRA_PATH="cassandra/${CASSANDRA_VERSION}/apache-cassandra-${CASSANDRA_VERSION}-bin.tar.gz"
+#CASSANDRA_DOWNLOAD="http://www.apache.org/dyn/closer.cgi?path=/${CASSANDRA_PATH}&as_json=1"
+#CASSANDRA_MIRROR=`wget -q -O - ${CASSANDRA_DOWNLOAD} | grep -oP "(?<=\"preferred\": \")[^\"]+"`
 
-echo "Downloading Apache Cassandra from $CASSANDRA_MIRROR$CASSANDRA_PATH..."
-wget -q -O - $CASSANDRA_MIRROR$CASSANDRA_PATH \
-    | tar -xzf - -C /usr/local
+#echo "Downloading Apache Cassandra from $CASSANDRA_MIRROR$CASSANDRA_PATH..."
+#wget -q -O - $CASSANDRA_MIRROR$CASSANDRA_PATH \
+#    | tar -xzf - -C /usr/local
+
+CASSANDRA_DOWNLOAD="http://archive.apache.org/dist/cassandra/3.11.2/apache-cassandra-3.11.2-bin.tar.gz"
+echo "Downloading Apache Cassandra from $CASSANDRA_DOWNLOAD..."
+wget -q -O - $CASSANDRA_DOWNLOAD | tar -xzf - -C /usr/local
 
 mkdir -p /cassandra_data/data
 mkdir -p /etc/cassandra

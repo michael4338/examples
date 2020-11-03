@@ -38,9 +38,12 @@ ENV CASSANDRA_HOME=/usr/local/apache-cassandra-${CASSANDRA_VERSION} \
 
 ADD files /
 
-RUN clean-install bash \
-    && /build.sh \
-    && rm /build.sh
+#RUN clean-install bash \
+#    && /build.sh \
+#    && rm /build.sh
+RUN clean-install bash
+RUN /build.sh
+RUN rm /build.sh
 
 VOLUME ["/$CASSANDRA_DATA"]
 

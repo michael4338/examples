@@ -18,8 +18,12 @@ PROJECT_ID?=google_samples
 PROJECT=gcr.io/${PROJECT_ID}
 CASSANDRA_VERSION=3.11.2
 
-all: kubernetes-cassandra.jar build
+all: kubernetes-cassandra.jar build-go build
 
+# Before this, install latest go by following https://golang.org/doc/install
+# then export GO111MODULE=on  https://stackoverflow.com/questions/27249420/how-do-i-install-requirements-in-go-cannot-find-package
+
+export GO111MODULE=on
 build-go:
 	go build -a -installsuffix cgo \
 		-ldflags "-s -w" \
