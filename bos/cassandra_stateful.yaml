@@ -1,0 +1,90 @@
+# https://kubernetes.io/zh/docs/tutorials/stateful-application/cassandra/#%E6%AD%A5%E9%AA%A4-1-%E5%88%9B%E5%BB%BA-cassandra-headless-service
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  serviceName: cassandra
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cassandra
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      terminationGracePeriodSeconds: 180
+      nodeSelector:
+        failure-domain.beta.kubernetes.io/zone: "zoneA"
+      containers:
+      - name: cassandra
+        # image: gcr.io/google-samples/cassandra:v13
+        image: cassandra:3.11
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 7000
+          name: intra-node
+        - containerPort: 7001
+          name: tls-intra-node
+        - containerPort: 7199
+          name: jmx
+        - containerPort: 9042
+          name: cql
+        resources:
+          limits:
+            cpu: "2000m"
+            memory: 20Gi
+          requests:
+            cpu: "2000m"
+            memory: 20Gi
+        securityContext:
+          capabilities:
+            add:
+              - IPC_LOCK
+        lifecycle:
+          preStop:
+            exec:
+              command: 
+              - /bin/sh
+              - -c
+              - nodetool drain
+        env:
+          - name: MAX_HEAP_SIZE
+            value: 10240M
+          - name: HEAP_NEWSIZE
+            value: 2000M
+          - name: CASSANDRA_SEEDS
+            value: "cassandra-0.cassandra.default.svc.cluster.local"
+          - name: CASSANDRA_CLUSTER_NAME
+            value: "K8Demo"
+          - name: CASSANDRA_DC
+            value: "DC1-K8Demo"
+          - name: CASSANDRA_RACK
+            value: "Rack1-K8Demo"
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+        # readinessProbe:
+        #   exec:
+        #     command:
+        #     - /bin/bash
+        #     - -c
+        #     - /ready-probe.sh
+        #   initialDelaySeconds: 15
+        #   timeoutSeconds: 5
+        volumeMounts:
+        - name: cassandra-data
+          mountPath: /cassandra_data
+  volumeClaimTemplates:
+  - metadata:
+      name: cassandra-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 90Gi
+      storageClassName: ssd2

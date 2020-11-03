@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: csi-pvc-cds
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ssd 
+  resources:
+    requests:
+      storage: 90Gi
