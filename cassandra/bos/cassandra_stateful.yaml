@@ -21,8 +21,7 @@ spec:
         failure-domain.beta.kubernetes.io/zone: "zoneA"
       containers:
       - name: cassandra
-        # image: gcr.io/google-samples/cassandra:v13
-        image: cassandra:3.11
+        image: hub.baidubce.com/apollofuel/cassandra:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7000
