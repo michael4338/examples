@@ -21,8 +21,8 @@ spec:
         failure-domain.beta.kubernetes.io/zone: "zoneA"
       containers:
       - name: cassandra
-        image: hub.baidubce.com/apollofuel/cassandra:latest
-        imagePullPolicy: IfNotPresent
+        image: michael4338/cassandra:20201104_3
+        imagePullPolicy: Always
         ports:
         - containerPort: 7000
           name: intra-node
